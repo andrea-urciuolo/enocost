@@ -22,7 +22,7 @@ export default function App() {
     <div className="min-h-screen bg-gray-100 text-gray-900 flex flex-col">
       {/* Header Mobile-Responsive */}
       <header className="bg-red-900 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center print:hidden">
-        <h1 className="text-xl font-black tracking-tight">EnoCost <span className="text-xs font-normal opacity-75">v1.0 COGS</span></h1>
+        <h1 className="text-xl font-black tracking-tight">EnoCost</h1>
         <button
           onClick={handleCreateNew}
           className="bg-white text-red-900 font-bold px-4 py-2 rounded-lg text-sm shadow hover:bg-gray-100 transition-all min-h-[44px] flex items-center"
@@ -37,7 +37,7 @@ export default function App() {
         {/* Colonna Navigazione Preset */}
         <div className="lg:col-span-1 space-y-4 print:hidden">
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-3">I Tuoi Vini Salva</h2>
+            <h2 className="text-sm font-black uppercase tracking-wider mb-3" style={{ color: '#7f1d1d' }}>I Tuoi Vini Salvati</h2>
             {presets.length === 0 ? (
               <p className="text-sm text-gray-400 italic py-4 text-center">Nessun vino salvato. Clicca su "+ Nuovo Vino" per iniziare.</p>
             ) : (

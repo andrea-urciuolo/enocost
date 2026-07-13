@@ -27,8 +27,7 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
 
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm sticky top-4 space-y-6 print:static print:border-none print:shadow-none print:p-0 print:mb-8">
-      <h2 className="text-lg font-bold text-gray-900 border-b pb-2 print:text-2xl">Analisi COGS: {activePreset.nome}</h2>
-      
+      <h2 className="text-lg font-black border-b border-gray-200 pb-2 print:text-2xl" style={{ color: '#7f1d1d' }}>Analisi COGS: {activePreset.nome}</h2>      
       {/* Indicatori Principali */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-red-50 p-4 rounded-lg border border-red-100 print:bg-white print:border-gray-300">
@@ -116,7 +115,7 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
             onClick={() => exportPresetToCsv(activePreset, breakdown)}
             className="flex items-center justify-center space-x-1 bg-green-700 text-white p-2 rounded-lg font-semibold text-sm hover:bg-green-800 transition-colors min-h-[44px]"
           >
-            <span>📊 Eccel / CSV</span>
+            <span>📊 Excel / CSV</span>
           </button>
           <button
             onClick={() => window.print()}
