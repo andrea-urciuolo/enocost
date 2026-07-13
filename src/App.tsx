@@ -21,7 +21,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex flex-col">
       {/* Header Mobile-Responsive */}
-      <header className="bg-red-900 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
+      <header className="bg-red-900 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center print:hidden">
         <h1 className="text-xl font-black tracking-tight">EnoCost <span className="text-xs font-normal opacity-75">v1.0 COGS</span></h1>
         <button
           onClick={handleCreateNew}
@@ -32,10 +32,10 @@ export default function App() {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6 print:block print:p-0">
         
         {/* Colonna Navigazione Preset */}
-        <div className="lg:col-span-1 space-y-4">
+        <div className="lg:col-span-1 space-y-4 print:hidden">
           <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
             <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-3">I Tuoi Vini Salva</h2>
             {presets.length === 0 ? (
@@ -74,15 +74,16 @@ export default function App() {
 
         {/* Zona di Lavoro: Form e Output */}
         {activePreset && computedData ? (
-          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="order-2 md:order-1">
+          <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 print:flex print:flex-col">
+            <div className="order-2 md:order-1 print:block">
               <CostForm
                 preset={activePreset}
                 onUpdate={(fields) => updatePreset(activePreset.id, fields)}
               />
             </div>
-            <div className="order-1 md:order-2">
-              <CogsDashboard breakdown={computedData} />
+          {/* Spostiamo la dashboard in cima nel PDF usando l'ordine di stampa se necessario, o lasciamoli fluire */}
+            <div className="order-1 md:order-2 print:order-first print:mb-8">
+              <CogsDashboard breakdown={computedData} activePreset={activePreset} />
             </div>
           </div>
         ) : (

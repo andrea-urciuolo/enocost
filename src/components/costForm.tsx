@@ -31,7 +31,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
   const labelClass = "block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1";
 
   return (
-    <div className="space-y-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+    <div className="space-y-6 bg-gray-50 p-4 rounded-xl border border-gray-200 print:bg-white print:border-none print:p-0">
       {/* Informazioni Base */}
       <div>
         <label className={labelClass}>Nome Vino / Lotto</label>
@@ -44,7 +44,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 print:break-inside-avoid">
         <div>
           <label className={labelClass}>Numero Bottiglie</label>
           <input
@@ -81,7 +81,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 print:break-inside-avoid">
         <div>
           <label className={labelClass}>
             {materiaPrima.tipo === 'UVA' ? 'Costo Uva (€/100g)' : 'Costo Vino (€/L)'}
