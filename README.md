@@ -1,32 +1,27 @@
-# React + TypeScript + Vite
+# EnoCost — Controllo di Gestione Vitivinicolo (COGS)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+EnoCost è una Progressive Web App (PWA) progettata specificamente per le aziende vitivinicole e le cantine. Consente di calcolare in tempo reale il **COGS Industriale (Cost of Goods Sold)** per bottiglia e per lotto, disaccoppiando l'analisi tra materie prime (uva/sfuso), confezionamento e costi di processo/struttura allocati.
 
-Currently, two official plugins are available:
+L'applicazione è progettata con un approccio **Offline-First**, garantendo il pieno funzionamento in cantina anche in totale assenza di segnale internet.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Funzionalità Principali
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+*   **Calcolo COGS in Tempo Reale:** Algoritmo enologico integrato che calcola le rese uva/vino, l'impatto dei materiali secchi e l'allocazione delle quote fisse/orarie di manodopera e utenze.
+*   **Gestione Multi-Preset:** Possibilità di salvare, aggiornare ed eliminare i profili di costo di diversi vini o lotti direttamente sul dispositivo (tramite `localStorage`).
+*   **Esportazione Excel/CSV:** Generazione immediata di report tabellari puliti con separatori standard europei (`;`), pronti per il controllo di gestione o per il commercialista.
+*   **Reportistica PDF Nativa:** Layout ottimizzato per la stampa A4 (grazie alle direttive `print:` di Tailwind CSS) che esclude i menu e genera una scheda tecnica pulita con grafici d'incidenza SVG.
+*   **PWA Installabile:** Installazione nativa su smartphone Android (Chrome) e iOS (Safari) per un'esperienza a schermo intero senza barre del browser.
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Stack Tecnologico
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+*   **Framework:** React 18 con TypeScript (per la massima robustezza del codice)
+*   **Build Tool:** Vite (Ultra-veloce e leggero)
+*   **State Management:** Zustand (Persistenza automatica dello stato locale)
+*   **Stile & Layout:** Tailwind CSS (Interfaccia responsive e ottimizzazione di stampa)
+*   **PWA Engine:** `@vite-pwa/plugin` con Service Worker personalizzato
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+---
