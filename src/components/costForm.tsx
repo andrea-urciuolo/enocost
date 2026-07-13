@@ -54,6 +54,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
             value={numeroBottiglie}
             className={inputClass}
             onChange={(e) => onUpdate({ numeroBottiglie: Math.max(1, parseInt(e.target.value) || 0) })}
+            onFocus={(e) => e.target.select()}
           />
         </div>
       </div>
