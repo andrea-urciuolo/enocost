@@ -6,7 +6,7 @@ interface CostFormProps {
 }
 
 export default function CostForm({ preset, onUpdate }: CostFormProps) {
-  const { materiaPrima, costiFissiEVariabili, numeroBottiglie, nome } = preset;
+  const { materiaPrima, costiFissiEVariabili, numeroBottiglie, nome, marginePercentuale, provvigionePercentuale } = preset;
 
   const handleMateriaPrimaChange = (key: string, value: any) => {
     onUpdate({
@@ -26,7 +26,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
     });
   };
 
-  // Helper per generare una classe di stile uniforme e touch-friendly per gli input
+  // Classe CSS standard per input touch-friendly e veloci
   const inputClass = "w-full min-h-[44px] p-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-600 transition-all text-base";
   const labelClass = "block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1";
 
@@ -122,6 +122,18 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
         <h3 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Costi Materiali e Confezionamento</h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
+            <label className={labelClass}>Bottiglia Vetro (€/cad)</label>
+            <input
+              type="number"
+              inputMode="decimal"
+              step="any"
+              value={costiFissiEVariabili.vetro || ''}
+              placeholder="0.00"
+              className={inputClass}
+              onChange={(e) => handleCostiChange('vetro', parseFloat(e.target.value) || 0)}
+            />
+          </div>
+          <div>
             <label className={labelClass}>Tappo (€/cad)</label>
             <input
               type="number"
@@ -169,7 +181,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
               onChange={(e) => handleCostiChange('cartone', parseFloat(e.target.value) || 0)}
             />
           </div>
-          <div className="col-span-2">
+          <div>
             <label className={labelClass}>Imbottigliamento (€/bottiglia)</label>
             <input
               type="number"
@@ -180,15 +192,15 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
               className={inputClass}
               onChange={(e) => handleCostiChange('imbottigliamento', parseFloat(e.target.value) || 0)}
             />
-        </div>
+          </div>
         </div>
       </div>
 
       <hr className="border-gray-200" />
 
-      {/* Sezione Struttura, Utenze e Lavoro */}
+      {/* Sezione Struttura, Utenze, Lavoro e Trasporto */}
       <div>
-        <h3 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Processo e Quote Allocate (Lotto)</h3>
+        <h3 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Processo, Logistica e Quote Allocate</h3>
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2">
             <label className={labelClass}>Vinificazione (€/L di vino nel lotto)</label>
@@ -224,6 +236,56 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
               placeholder="Ore totali × tariffa oraria"
               className={inputClass}
               onChange={(e) => handleCostiChange('manoDopera', parseFloat(e.target.value) || 0)}
+            />
+          </div>
+          <div className="col-span-2">
+            <label className={labelClass}>Trasporto e Logistica (€/bottiglia)</label>
+            <input
+              type="number"
+              inputMode="decimal"
+              step="any"
+              value={costiFissiEVariabili.trasporto || ''}
+              placeholder="Costo di spedizione unitario stimato"
+              className={inputClass}
+              onChange={(e) => handleCostiChange('trasporto', parseFloat(e.target.value) || 0)}
+            />
+          </div>
+        </div>
+      </div>
+
+      <hr className="border-gray-200" />
+
+      {/* Sezione Politiche Commerciali e Pricing*/}
+      <div>
+        <h3 className="text-sm font-bold text-red-900 mb-3 uppercase tracking-wider">Politiche Commerciali e Pricing</h3>
+        <div className="grid grid-cols-2 gap-4 print:break-inside-avoid">
+          <div>
+            <label className={labelClass}>Margine Utile (+ % Markup)</label>
+            <input
+              type="number"
+              inputMode="decimal"
+              step="any"
+              min="0"
+              value={marginePercentuale || ''}
+              placeholder="Es. 35%"
+              className={inputClass}
+              onChange={(e) => onUpdate({ marginePercentuale: Math.max(0, parseFloat(e.target.value) || 0) })}
+              onFocus={(e) => e.target.select()}
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Provvigioni / Sconto (- %)</label>
+            <input
+              type="number"
+              inputMode="decimal"
+              step="any"
+              min="0"
+              max="100"
+              value={provvigionePercentuale || ''}
+              placeholder="Es. 15%"
+              className={inputClass}
+              onChange={(e) => onUpdate({ provvigionePercentuale: Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)) })}
+              onFocus={(e) => e.target.select()}
             />
           </div>
         </div>

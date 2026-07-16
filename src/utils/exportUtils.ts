@@ -2,17 +2,19 @@ import type { WinePreset } from '../types/wine';
 import type { CostBreakdown } from './calculationEngine';
 
 export const exportPresetToCsv = (preset: WinePreset, breakdown: CostBreakdown) => {
-  const { dettaglioPerBottiglia, macroPercentuali } = breakdown;
+  const { dettaglioPerBottiglia, macroPercentuali, pricing } = breakdown;
 
   // Struttura delle righe del report Excel/CSV
   const rows = [
-    ['REPORT COGS INDUSTRIALE - ENOCOST'],
+    ['REPORT FINANZIARIO E COGS INDUSTRIALE - ENOCOST'],
     ['Nome Vino / Lotto', preset.nome],
     ['Data Report', new Date().toLocaleDateString('it-IT')],
     ['Numero Bottiglie Lotto', preset.numeroBottiglie.toString()],
     [],
+    ['ANALISI COGS INDUSTRIALE PER VOCE'],
     ['VOCE DI COSTO', 'COSTO UNITARIO (€/Bottiglia)', 'INCIDENZA SUL TOTALE (%)'],
     ['Materia Prima (Uva/Vino)', dettaglioPerBottiglia.materiaPrima.toFixed(4), macroPercentuali.materiaPrima.toFixed(2)],
+    ['Bottiglia di Vetro', dettaglioPerBottiglia.vetro.toFixed(4), ((dettaglioPerBottiglia.vetro / breakdown.costoPerBottiglia) * 100).toFixed(2)],
     ['Tappo', dettaglioPerBottiglia.tappo.toFixed(4), ((dettaglioPerBottiglia.tappo / breakdown.costoPerBottiglia) * 100).toFixed(2)],
     ['Capsula', dettaglioPerBottiglia.capsula.toFixed(4), ((dettaglioPerBottiglia.capsula / breakdown.costoPerBottiglia) * 100).toFixed(2)],
     ['Etichetta', dettaglioPerBottiglia.etichetta.toFixed(4), ((dettaglioPerBottiglia.etichetta / breakdown.costoPerBottiglia) * 100).toFixed(2)],
@@ -21,10 +23,20 @@ export const exportPresetToCsv = (preset: WinePreset, breakdown: CostBreakdown) 
     ['Vinificazione', dettaglioPerBottiglia.vinificazione.toFixed(4), ((dettaglioPerBottiglia.vinificazione / breakdown.costoPerBottiglia) * 100).toFixed(2)],
     ['Utenze Allocate', dettaglioPerBottiglia.utenze.toFixed(4), ((dettaglioPerBottiglia.utenze / breakdown.costoPerBottiglia) * 100).toFixed(2)],
     ['Mano d\'opera', dettaglioPerBottiglia.manoDopera.toFixed(4), ((dettaglioPerBottiglia.manoDopera / breakdown.costoPerBottiglia) * 100).toFixed(2)],
+    ['Trasporto e Logistica', dettaglioPerBottiglia.trasporto.toFixed(4), ((dettaglioPerBottiglia.trasporto / breakdown.costoPerBottiglia) * 100).toFixed(2)],
     [],
-    ['SINTESI FINALE'],
-    ['COSTO INDUSTRIALE PER BOTTIGLIA', `EUR ${breakdown.costoPerBottiglia.toFixed(2)}`],
-    ['COSTO TOTALE DEL LOTTO', `EUR ${breakdown.costoTotaleLotto.toFixed(2)}`]
+    ['SINTESI INDUSTRIALE'],
+    ['COSTO INDUSTRIALE PER BOTTIGLIA (COGS)', `EUR ${breakdown.costoPerBottiglia.toFixed(2)}`],
+    ['COSTO TOTALE DEL LOTTO', `EUR ${breakdown.costoTotaleLotto.toFixed(2)}`],
+    [],
+    ['POLITICHE COMMERCIALI E PRICING'],
+    ['Margine Utile di Ricarica (Markup)', `${preset.marginePercentuale}%`],
+    ['PREZZO DI VENDITA TARGET', `EUR ${pricing.prezzoVenditaTarget.toFixed(2)}`],
+    ['Provvigioni Agenti / Sconto applicato', `${preset.provvigionePercentuale}%`],
+    ['PREZZO NETTO RICAVATO', `EUR ${pricing.prezzoNetto.toFixed(2)}`],
+    ['MARGINE NETTO REALE (€/Bottiglia)', `EUR ${pricing.margineEffettivoEuro.toFixed(2)}`],
+    ['RICAVO NETTO TOTALE LOTTO', `EUR ${pricing.ricavoTotaleLotto.toFixed(2)}`],
+    ['PROFITTO NETTO TOTALE LOTTO', `EUR ${pricing.profittoTotaleLotto.toFixed(2)}`]
   ];
 
   // Trasformazione in formato CSV leggibile da Excel (usando il punto e virgola come separatore standard europeo)
