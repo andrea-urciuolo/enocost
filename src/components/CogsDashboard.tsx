@@ -37,34 +37,40 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-red-50 p-4 rounded-lg border border-red-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-red-700 uppercase tracking-wider block print:text-gray-600">COGS / Bottiglia</span>
-            <span className="text-2xl font-black text-red-900 print:text-3xl">€ {costoPerBottiglia.toFixed(2)}</span>
+            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) per mostrare i minimi dettagli */}
+            <span className="text-2xl font-black text-red-900 print:text-3xl">€ {costoPerBottiglia.toFixed(4)}</span>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider block">Costo Lotto ({activePreset.numeroBottiglie} bt)</span>
-            <span className="text-2xl font-bold text-gray-900 print:text-3xl">€ {costoTotaleLotto.toFixed(2)}</span>
+            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) */}
+            <span className="text-2xl font-bold text-gray-900 print:text-3xl">€ {costoTotaleLotto.toFixed(4)}</span>
           </div>
         </div>
       </div>
 
-      {/* Sezione 2: Analisi Prezzi e Margini*/}
+      {/* Sezione 2: Analisi Prezzi e Margini */}
       <div className="space-y-2 border-t border-gray-100 pt-4">
         <h3 className="text-xs font-bold text-red-800 uppercase tracking-wider">Pricing e Margini Commerciali</h3>
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-green-50/70 p-4 rounded-lg border border-green-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-green-800 uppercase tracking-wider block">Prezzo Target (+{activePreset.marginePercentuale}%)</span>
-            <span className="text-xl font-black text-green-950">€ {pricing.prezzoVenditaTarget.toFixed(2)}</span>
+            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) */}
+            <span className="text-xl font-black text-green-950">€ {pricing.prezzoVenditaTarget.toFixed(4)}</span>
           </div>
           <div className="bg-emerald-50/70 p-4 rounded-lg border border-emerald-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-emerald-800 uppercase tracking-wider block">Prezzo Netto Ricavato (-{activePreset.provvigionePercentuale}%)</span>
-            <span className="text-xl font-black text-emerald-950">€ {pricing.prezzoNetto.toFixed(2)}</span>
+            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) */}
+            <span className="text-xl font-black text-emerald-950">€ {pricing.prezzoNetto.toFixed(4)}</span>
           </div>
           <div className="bg-blue-50/70 p-4 rounded-lg border border-blue-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-blue-800 uppercase tracking-wider block">Utile Netto / Bottiglia</span>
-            <span className="text-lg font-black text-blue-900">€ {pricing.margineEffettivoEuro.toFixed(2)}</span>
+            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) */}
+            <span className="text-lg font-black text-blue-900">€ {pricing.margineEffettivoEuro.toFixed(4)}</span>
           </div>
           <div className="bg-amber-50/70 p-4 rounded-lg border border-amber-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-amber-800 uppercase tracking-wider block">Utile Netto Totale Lotto</span>
-            <span className="text-lg font-black text-amber-900">€ {pricing.profittoTotaleLotto.toFixed(2)}</span>
+            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) */}
+            <span className="text-lg font-black text-amber-900">€ {pricing.profittoTotaleLotto.toFixed(4)}</span>
           </div>
         </div>
       </div>
@@ -122,7 +128,7 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <span className="w-3 h-3 rounded-full bg-amber-600 inline-block"></span>
-              <span className="text-gray-600">Confezionamento</span>
+              <span className="text-gray-600">Confezionamento (vetro inc.)</span>
             </div>
             <span className="font-semibold text-gray-900">{conf.toFixed(1)}%</span>
           </div>
