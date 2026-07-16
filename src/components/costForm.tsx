@@ -122,7 +122,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
         <h3 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Costi Materiali e Confezionamento</h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className={labelClass}>Bottiglia Vetro (€/cad) [NEW]</label>
+            <label className={labelClass}>Bottiglia Vetro (€/cad)</label>
             <input
               type="number"
               inputMode="decimal"
@@ -239,7 +239,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
             />
           </div>
           <div className="col-span-2">
-            <label className={labelClass}>Trasporto e Logistica (€/bottiglia) [NEW]</label>
+            <label className={labelClass}>Trasporto e Logistica (€/bottiglia)</label>
             <input
               type="number"
               inputMode="decimal"
@@ -257,7 +257,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
 
       {/* Sezione Politiche Commerciali e Pricing*/}
       <div>
-        <h3 className="text-sm font-bold text-red-900 mb-3 uppercase tracking-wider">Politiche Commerciali e Pricing [NEW]</h3>
+        <h3 className="text-sm font-bold text-red-900 mb-3 uppercase tracking-wider">Politiche Commerciali e Pricing</h3>
         <div className="grid grid-cols-2 gap-4 print:break-inside-avoid">
           <div>
             <label className={labelClass}>Margine Utile (+ % Markup)</label>

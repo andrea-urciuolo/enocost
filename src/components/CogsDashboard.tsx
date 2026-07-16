@@ -46,7 +46,7 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
         </div>
       </div>
 
-      {/* Sezione 2: Analisi Prezzi e Margini [NEW] */}
+      {/* Sezione 2: Analisi Prezzi e Margini*/}
       <div className="space-y-2 border-t border-gray-100 pt-4">
         <h3 className="text-xs font-bold text-red-800 uppercase tracking-wider">Pricing e Margini Commerciali</h3>
         <div className="grid grid-cols-2 gap-4">
@@ -122,7 +122,7 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <span className="w-3 h-3 rounded-full bg-amber-600 inline-block"></span>
-              <span className="text-gray-600">Confezionamento (vetro inc.)</span>
+              <span className="text-gray-600">Confezionamento</span>
             </div>
             <span className="font-semibold text-gray-900">{conf.toFixed(1)}%</span>
           </div>
