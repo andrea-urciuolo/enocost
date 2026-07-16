@@ -9,6 +9,8 @@ export interface CostiConfig {
   utenze: number;          // € / quota allocata
   vinificazione: number;   // € / litro o lotto
   imbottigliamento: number;// € / unità
+  vetro: number;           // € / unità (costo della bottiglia di vetro vuota) [NEW]
+  trasporto: number;       // € / unità (costo di trasporto/logistica per bottiglia) [NEW]
 }
 
 export interface MateriaPrimaInput {
@@ -25,6 +27,8 @@ export interface WinePreset {
   materiaPrima: MateriaPrimaInput;
   costiFissiEVariabili: CostiConfig;
   numeroBottiglie: number;    // Default: 1
+  marginePercentuale: number;       // % di Markup utile da aggiungere al COGS [NEW]
+  provvigionePercentuale: number;   // % di provvigione/sconto da sottrarre al prezzo target [NEW]
 }
 
 // Stato iniziale di default per i nuovi form
@@ -43,7 +47,11 @@ export const DEFAULT_PRESET_VALUES: Omit<WinePreset, 'id' | 'createdAt' | 'updat
     manoDopera: 0,
     utenze: 0,
     vinificazione: 0,
-    imbottigliamento: 0
+    imbottigliamento: 0,
+    vetro: 0,
+    trasporto: 0
   },
-  numeroBottiglie: 1
+  numeroBottiglie: 1,
+  marginePercentuale: 0,
+  provvigionePercentuale: 0
 };
