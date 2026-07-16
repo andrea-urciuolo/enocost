@@ -8,7 +8,7 @@ interface CogsDashboardProps {
 }
 
 export default function CogsDashboard({ breakdown, activePreset }: CogsDashboardProps) {
-  const { costoTotaleLotto, costoPerBottiglia, macroPercentuali } = breakdown;
+  const { costoTotaleLotto, costoPerBottiglia, macroPercentuali, pricing } = breakdown;
 
   const radius = 50;
   const circumference = 2 * Math.PI * radius;
@@ -27,21 +27,50 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
 
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm sticky top-4 space-y-6 print:static print:border-none print:shadow-none print:p-0 print:mb-8">
-      <h2 className="text-lg font-black border-b border-gray-200 pb-2 print:text-2xl" style={{ color: '#7f1d1d' }}>Analisi COGS: {activePreset.nome}</h2>      
-      {/* Indicatori Principali */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-red-50 p-4 rounded-lg border border-red-100 print:bg-white print:border-gray-300">
-          <span className="text-xs font-semibold text-red-700 uppercase tracking-wider block print:text-gray-600">Costo / Bottiglia</span>
-          <span className="text-2xl font-black text-red-900 print:text-3xl">€ {costoPerBottiglia.toFixed(2)}</span>
+      <h2 className="text-lg font-black border-b border-gray-200 pb-2 print:text-2xl" style={{ color: '#7f1d1d' }}>
+        Analisi Finanziaria: {activePreset.nome || 'Senza nome'}
+      </h2>      
+      
+      {/* Sezione 1: Costo Industriale (COGS) */}
+      <div className="space-y-2">
+        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Struttura Costi Industriali</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-red-50 p-4 rounded-lg border border-red-100 print:bg-white print:border-gray-300">
+            <span className="text-xs font-semibold text-red-700 uppercase tracking-wider block print:text-gray-600">COGS / Bottiglia</span>
+            <span className="text-2xl font-black text-red-900 print:text-3xl">€ {costoPerBottiglia.toFixed(2)}</span>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 print:bg-white print:border-gray-300">
+            <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider block">Costo Lotto ({activePreset.numeroBottiglie} bt)</span>
+            <span className="text-2xl font-bold text-gray-900 print:text-3xl">€ {costoTotaleLotto.toFixed(2)}</span>
+          </div>
         </div>
-        <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 print:bg-white print:border-gray-300">
-          <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider block">Costo Totale Lotto ({activePreset.numeroBottiglie} bt)</span>
-          <span className="text-2xl font-bold text-gray-900 print:text-3xl">€ {costoTotaleLotto.toFixed(2)}</span>
+      </div>
+
+      {/* Sezione 2: Analisi Prezzi e Margini [NEW] */}
+      <div className="space-y-2 border-t border-gray-100 pt-4">
+        <h3 className="text-xs font-bold text-red-800 uppercase tracking-wider">Pricing e Margini Commerciali</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-green-50/70 p-4 rounded-lg border border-green-100 print:bg-white print:border-gray-300">
+            <span className="text-xs font-semibold text-green-800 uppercase tracking-wider block">Prezzo Target (+{activePreset.marginePercentuale}%)</span>
+            <span className="text-xl font-black text-green-950">€ {pricing.prezzoVenditaTarget.toFixed(2)}</span>
+          </div>
+          <div className="bg-emerald-50/70 p-4 rounded-lg border border-emerald-100 print:bg-white print:border-gray-300">
+            <span className="text-xs font-semibold text-emerald-800 uppercase tracking-wider block">Prezzo Netto Ricavato (-{activePreset.provvigionePercentuale}%)</span>
+            <span className="text-xl font-black text-emerald-950">€ {pricing.prezzoNetto.toFixed(2)}</span>
+          </div>
+          <div className="bg-blue-50/70 p-4 rounded-lg border border-blue-100 print:bg-white print:border-gray-300">
+            <span className="text-xs font-semibold text-blue-800 uppercase tracking-wider block">Utile Netto / Bottiglia</span>
+            <span className="text-lg font-black text-blue-900">€ {pricing.margineEffettivoEuro.toFixed(2)}</span>
+          </div>
+          <div className="bg-amber-50/70 p-4 rounded-lg border border-amber-100 print:bg-white print:border-gray-300">
+            <span className="text-xs font-semibold text-amber-800 uppercase tracking-wider block">Utile Netto Totale Lotto</span>
+            <span className="text-lg font-black text-amber-900">€ {pricing.profittoTotaleLotto.toFixed(2)}</span>
+          </div>
         </div>
       </div>
 
       {/* Grafico Donut SVG Nativo */}
-      <div className="flex flex-col items-center justify-center p-4 print:page-break-inside-avoid">
+      <div className="flex flex-col items-center justify-center p-4 border-t border-gray-100 pt-4 print:page-break-inside-avoid">
         <div className="relative w-40 h-40">
           <svg className="w-full h-full" viewBox="0 0 140 140">
             {(mp === 0 && conf === 0 && struct === 0) && (
@@ -93,14 +122,14 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <span className="w-3 h-3 rounded-full bg-amber-600 inline-block"></span>
-              <span className="text-gray-600">Confezionamento</span>
+              <span className="text-gray-600">Confezionamento (vetro inc.)</span>
             </div>
             <span className="font-semibold text-gray-900">{conf.toFixed(1)}%</span>
           </div>
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <span className="w-3 h-3 rounded-full bg-blue-600 inline-block"></span>
-              <span className="text-gray-600">Processo & Struttura</span>
+              <span className="text-gray-600">Processo & Spedizione</span>
             </div>
             <span className="font-semibold text-gray-900">{struct.toFixed(1)}%</span>
           </div>
