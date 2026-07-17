@@ -70,7 +70,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
             className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${materiaPrima.tipo === 'UVA' ? 'bg-white text-red-700 shadow-sm' : 'text-gray-600'}`}
             onClick={() => handleMateriaPrimaChange('tipo', 'UVA')}
           >
-            Uva (€/100g)
+            Uva (€/Kg)
           </button>
           <button
             type="button"
@@ -85,7 +85,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
       <div className="grid grid-cols-2 gap-4 print:break-inside-avoid">
         <div>
           <label className={labelClass}>
-            {materiaPrima.tipo === 'UVA' ? 'Costo Uva (€/100g)' : 'Costo Vino (€/L)'}
+            {materiaPrima.tipo === 'UVA' ? 'Costo Uva (€/Kg)' : 'Costo Vino (€/L)'}
           </label>
           <input
             type="number"
