@@ -1,6 +1,7 @@
 import type { CostBreakdown } from '../utils/calculationEngine';
 import type { WinePreset } from '../types/wine';
 import { exportPresetToCsv } from '../utils/exportUtils';
+import FormattedPrice from './FormattedPrice';
 
 interface CogsDashboardProps {
   breakdown: CostBreakdown;
@@ -37,13 +38,11 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-red-50 p-4 rounded-lg border border-red-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-red-700 uppercase tracking-wider block print:text-gray-600">COGS / Bottiglia</span>
-            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) per mostrare i minimi dettagli */}
-            <span className="text-2xl font-black text-red-900 print:text-3xl">€ {costoPerBottiglia.toFixed(4)}</span>
+            <FormattedPrice value={costoPerBottiglia} className="text-2xl font-black text-red-900 print:text-3xl" />
           </div>
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-gray-600 uppercase tracking-wider block">Costo Lotto ({activePreset.numeroBottiglie} bt)</span>
-            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) */}
-            <span className="text-2xl font-bold text-gray-900 print:text-3xl">€ {costoTotaleLotto.toFixed(4)}</span>
+            <FormattedPrice value={costoTotaleLotto} className="text-2xl font-bold text-gray-900 print:text-3xl" />
           </div>
         </div>
       </div>
@@ -54,23 +53,19 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-green-50/70 p-4 rounded-lg border border-green-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-green-800 uppercase tracking-wider block">Prezzo Target (+{activePreset.marginePercentuale}%)</span>
-            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) */}
-            <span className="text-xl font-black text-green-950">€ {pricing.prezzoVenditaTarget.toFixed(4)}</span>
+            <FormattedPrice value={pricing.prezzoVenditaTarget} className="text-xl font-black text-green-950" />
           </div>
           <div className="bg-emerald-50/70 p-4 rounded-lg border border-emerald-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-emerald-800 uppercase tracking-wider block">Prezzo Netto Ricavato (-{activePreset.provvigionePercentuale}%)</span>
-            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) */}
-            <span className="text-xl font-black text-emerald-950">€ {pricing.prezzoNetto.toFixed(4)}</span>
+            <FormattedPrice value={pricing.prezzoNetto} className="text-xl font-black text-emerald-950" />
           </div>
           <div className="bg-blue-50/70 p-4 rounded-lg border border-blue-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-blue-800 uppercase tracking-wider block">Utile Netto / Bottiglia</span>
-            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) */}
-            <span className="text-lg font-black text-blue-900">€ {pricing.margineEffettivoEuro.toFixed(4)}</span>
+            <FormattedPrice value={pricing.margineEffettivoEuro} className="text-lg font-black text-blue-900" />
           </div>
           <div className="bg-amber-50/70 p-4 rounded-lg border border-amber-100 print:bg-white print:border-gray-300">
             <span className="text-xs font-semibold text-amber-800 uppercase tracking-wider block">Utile Netto Totale Lotto</span>
-            {/* AGGIORNATO: da .toFixed(2) a .toFixed(4) */}
-            <span className="text-lg font-black text-amber-900">€ {pricing.profittoTotaleLotto.toFixed(4)}</span>
+            <FormattedPrice value={pricing.profittoTotaleLotto} className="text-lg font-black text-amber-900" />
           </div>
         </div>
       </div>
@@ -147,12 +142,14 @@ export default function CogsDashboard({ breakdown, activePreset }: CogsDashboard
         <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Esportazione Report</h3>
         <div className="grid grid-cols-2 gap-2">
           <button
+            type="button"
             onClick={() => exportPresetToCsv(activePreset, breakdown)}
             className="flex items-center justify-center space-x-1 bg-green-700 text-white p-2 rounded-lg font-semibold text-sm hover:bg-green-800 transition-colors min-h-[44px]"
           >
             <span>📊 Excel / CSV</span>
           </button>
           <button
+            type="button"
             onClick={() => window.print()}
             className="flex items-center justify-center space-x-1 bg-gray-800 text-white p-2 rounded-lg font-semibold text-sm hover:bg-gray-900 transition-colors min-h-[44px]"
           >

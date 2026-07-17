@@ -44,13 +44,13 @@ export const calculateCogs = (preset: WinePreset): CostBreakdown => {
   if (materiaPrima.tipo === 'VINO') {
     costoMateriaPrimaPerLitro = materiaPrima.costoUnitario;
   } else {
-    // Modalità UVA: input in €/100g (ovvero €/hg). 
-    // €/kg = costoUnitario * 10.
-    // Se la resa è 70%, 100kg di uva producono 70L di vino.
-    // Formula: (costo al kg * 100) / resaPercentuale
+    // =================================================================
+    // NUOVA MODALITÀ UVA: L'input è direttamente in €/kg (es. 1.20 €/kg)
+    // Se 100kg di uva costano (costoUnitario * 100), essi producono "resa" litri.
+    // Formula lineare: Costo al Litro = (Costo al kg * 100) / Resa
+    // =================================================================
     const resa = materiaPrima.resaPercentuale || 70;
-    const costoAlKg = materiaPrima.costoUnitario * 10;
-    costoMateriaPrimaPerLitro = (costoAlKg * 100) / resa;
+    costoMateriaPrimaPerLitro = (materiaPrima.costoUnitario * 100) / resa;
   }
 
   // Costo materia prima per singola bottiglia (0.75L)
