@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import type { WinePreset, CostiConfig } from '../types/wine';
+import DecimalInput from './DecimalInput'; // Controlla se la 'D' è maiuscola o minuscola nel tuo file system!
 
 interface CostFormProps {
   preset: WinePreset;
@@ -7,6 +9,42 @@ interface CostFormProps {
 
 export default function CostForm({ preset, onUpdate }: CostFormProps) {
   const { materiaPrima, costiFissiEVariabili, numeroBottiglie, nome, marginePercentuale, provvigionePercentuale } = preset;
+
+  // Stato locale per consentire all'utente di svuotare e digitare liberamente il numero di bottiglie
+  const [bottiglieText, setBottiglieText] = useState<string>(numeroBottiglie.toString());
+
+  // Sincronizza lo stato locale se il preset viene aggiornato esternamente
+  useEffect(() => {
+    setBottiglieText(numeroBottiglie.toString());
+  }, [numeroBottiglie]);
+
+  const handleBottiglieChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    
+    // Accetta solo stringhe vuote (durante la cancellazione) o numeri interi positivi
+    if (val === '' || /^\d+$/.test(val)) {
+      setBottiglieText(val);
+      
+      const parsed = parseInt(val, 10);
+      // Aggiorna lo stato globale solo se è un numero valido e definitivo
+      if (!isNaN(parsed) && parsed > 0) {
+        onUpdate({ numeroBottiglie: parsed });
+      }
+    }
+  };
+
+  const handleBottiglieBlur = () => {
+    const parsed = parseInt(bottiglieText, 10);
+    // Se l'utente esce lasciando vuoto o 0, ripristina il valore minimo di sicurezza (1)
+    if (isNaN(parsed) || parsed <= 0) {
+      setBottiglieText('1');
+      onUpdate({ numeroBottiglie: 1 });
+    } else {
+      // Pulisce eventuali zeri iniziali digitati per errore (es. "0500" -> "500")
+      setBottiglieText(parsed.toString());
+      onUpdate({ numeroBottiglie: parsed });
+    }
+  };
 
   const handleMateriaPrimaChange = (key: string, value: any) => {
     onUpdate({
@@ -26,7 +64,6 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
     });
   };
 
-  // Classe CSS standard per input touch-friendly e veloci
   const inputClass = "w-full min-h-[44px] p-3 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-600 transition-all text-base";
   const labelClass = "block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1";
 
@@ -48,13 +85,14 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
         <div>
           <label className={labelClass}>Numero Bottiglie</label>
           <input
-            type="number"
+            type="text"
             inputMode="numeric"
-            min="1"
-            value={numeroBottiglie}
+            value={bottiglieText}
             className={inputClass}
-            onChange={(e) => onUpdate({ numeroBottiglie: Math.max(1, parseInt(e.target.value) || 0) })}
+            onChange={handleBottiglieChange}
+            onBlur={handleBottiglieBlur}
             onFocus={(e) => e.target.select()}
+            placeholder="1"
           />
         </div>
       </div>
@@ -87,29 +125,22 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
           <label className={labelClass}>
             {materiaPrima.tipo === 'UVA' ? 'Costo Uva (€/Kg)' : 'Costo Vino (€/L)'}
           </label>
-          <input
-            type="number"
-            inputMode="decimal"
-            step="any"
-            value={materiaPrima.costoUnitario || ''}
-            placeholder="0.00"
+          <DecimalInput
+            value={materiaPrima.costoUnitario}
+            placeholder="0.0000"
             className={inputClass}
-            onChange={(e) => handleMateriaPrimaChange('costoUnitario', parseFloat(e.target.value) || 0)}
+            onChange={(val: number) => handleMateriaPrimaChange('costoUnitario', val)}
           />
         </div>
 
         {materiaPrima.tipo === 'UVA' && (
           <div>
             <label className={labelClass}>Resa Uva/Vino (%)</label>
-            <input
-              type="number"
-              inputMode="numeric"
-              min="1"
-              max="100"
-              value={materiaPrima.resaPercentuale || ''}
+            <DecimalInput
+              value={materiaPrima.resaPercentuale || 70}
               placeholder="70"
               className={inputClass}
-              onChange={(e) => handleMateriaPrimaChange('resaPercentuale', parseFloat(e.target.value) || 70)}
+              onChange={(val: number) => handleMateriaPrimaChange('resaPercentuale', val)}
             />
           </div>
         )}
@@ -123,74 +154,56 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className={labelClass}>Bottiglia Vetro (€/cad)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              value={costiFissiEVariabili.vetro || ''}
-              placeholder="0.00"
+            <DecimalInput
+              value={costiFissiEVariabili.vetro}
+              placeholder="0.0000"
               className={inputClass}
-              onChange={(e) => handleCostiChange('vetro', parseFloat(e.target.value) || 0)}
+              onChange={(val: number) => handleCostiChange('vetro', val)}
             />
           </div>
           <div>
             <label className={labelClass}>Tappo (€/cad)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              value={costiFissiEVariabili.tappo || ''}
-              placeholder="0.00"
+            <DecimalInput
+              value={costiFissiEVariabili.tappo}
+              placeholder="0.0000"
               className={inputClass}
-              onChange={(e) => handleCostiChange('tappo', parseFloat(e.target.value) || 0)}
+              onChange={(val: number) => handleCostiChange('tappo', val)}
             />
           </div>
           <div>
             <label className={labelClass}>Capsula (€/cad)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              value={costiFissiEVariabili.capsula || ''}
-              placeholder="0.00"
+            <DecimalInput
+              value={costiFissiEVariabili.capsula}
+              placeholder="0.0000"
               className={inputClass}
-              onChange={(e) => handleCostiChange('capsula', parseFloat(e.target.value) || 0)}
+              onChange={(val: number) => handleCostiChange('capsula', val)}
             />
           </div>
           <div>
             <label className={labelClass}>Etichetta (€/cad)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              value={costiFissiEVariabili.etichetta || ''}
-              placeholder="0.00"
+            <DecimalInput
+              value={costiFissiEVariabili.etichetta}
+              placeholder="0.0000"
               className={inputClass}
-              onChange={(e) => handleCostiChange('etichetta', parseFloat(e.target.value) || 0)}
+              onChange={(val: number) => handleCostiChange('etichetta', val)}
             />
           </div>
           <div>
             <label className={labelClass}>Cartone (€/bottiglia)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              value={costiFissiEVariabili.cartone || ''}
+            <DecimalInput
+              value={costiFissiEVariabili.cartone}
               placeholder="Es. Costo Scatola / 6"
               className={inputClass}
-              onChange={(e) => handleCostiChange('cartone', parseFloat(e.target.value) || 0)}
+              onChange={(val: number) => handleCostiChange('cartone', val)}
             />
           </div>
           <div>
             <label className={labelClass}>Imbottigliamento (€/bottiglia)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              value={costiFissiEVariabili.imbottigliamento || ''}
+            <DecimalInput
+              value={costiFissiEVariabili.imbottigliamento}
               placeholder="Quota servizio/linea mobile"
               className={inputClass}
-              onChange={(e) => handleCostiChange('imbottigliamento', parseFloat(e.target.value) || 0)}
+              onChange={(val: number) => handleCostiChange('imbottigliamento', val)}
             />
           </div>
         </div>
@@ -204,50 +217,38 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
         <div className="grid grid-cols-2 gap-4">
           <div className="col-span-2">
             <label className={labelClass}>Vinificazione (€/L di vino nel lotto)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              value={costiFissiEVariabili.vinificazione || ''}
+            <DecimalInput
+              value={costiFissiEVariabili.vinificazione}
               placeholder="Costo energia/trattamenti al litro"
               className={inputClass}
-              onChange={(e) => handleCostiChange('vinificazione', parseFloat(e.target.value) || 0)}
+              onChange={(val: number) => handleCostiChange('vinificazione', val)}
             />
           </div>
           <div>
             <label className={labelClass}>Utenze Allocate (€ fisso)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              value={costiFissiEVariabili.utenze || ''}
+            <DecimalInput
+              value={costiFissiEVariabili.utenze}
               placeholder="Quota acqua/energia lotto"
               className={inputClass}
-              onChange={(e) => handleCostiChange('utenze', parseFloat(e.target.value) || 0)}
+              onChange={(val: number) => handleCostiChange('utenze', val)}
             />
           </div>
           <div>
             <label className={labelClass}>Mano d'opera (€ totale)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              value={costiFissiEVariabili.manoDopera || ''}
+            <DecimalInput
+              value={costiFissiEVariabili.manoDopera}
               placeholder="Ore totali × tariffa oraria"
               className={inputClass}
-              onChange={(e) => handleCostiChange('manoDopera', parseFloat(e.target.value) || 0)}
+              onChange={(val: number) => handleCostiChange('manoDopera', val)}
             />
           </div>
           <div className="col-span-2">
             <label className={labelClass}>Trasporto e Logistica (€/bottiglia)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              value={costiFissiEVariabili.trasporto || ''}
+            <DecimalInput
+              value={costiFissiEVariabili.trasporto}
               placeholder="Costo di spedizione unitario stimato"
               className={inputClass}
-              onChange={(e) => handleCostiChange('trasporto', parseFloat(e.target.value) || 0)}
+              onChange={(val: number) => handleCostiChange('trasporto', val)}
             />
           </div>
         </div>
@@ -261,31 +262,20 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
         <div className="grid grid-cols-2 gap-4 print:break-inside-avoid">
           <div>
             <label className={labelClass}>Margine Utile (+ % Markup)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              min="0"
-              value={marginePercentuale || ''}
+            <DecimalInput
+              value={marginePercentuale}
               placeholder="Es. 35%"
               className={inputClass}
-              onChange={(e) => onUpdate({ marginePercentuale: Math.max(0, parseFloat(e.target.value) || 0) })}
-              onFocus={(e) => e.target.select()}
+              onChange={(val: number) => onUpdate({ marginePercentuale: Math.max(0, val) })}
             />
           </div>
           <div>
             <label className={labelClass}>Provvigioni / Sconto (- %)</label>
-            <input
-              type="number"
-              inputMode="decimal"
-              step="any"
-              min="0"
-              max="100"
-              value={provvigionePercentuale || ''}
+            <DecimalInput
+              value={provvigionePercentuale}
               placeholder="Es. 15%"
               className={inputClass}
-              onChange={(e) => onUpdate({ provvigionePercentuale: Math.min(100, Math.max(0, parseFloat(e.target.value) || 0)) })}
-              onFocus={(e) => e.target.select()}
+              onChange={(val: number) => onUpdate({ provvigionePercentuale: Math.min(100, Math.max(0, val)) })}
             />
           </div>
         </div>
