@@ -7,6 +7,71 @@ interface CostFormProps {
   onUpdate: (fields: Partial<WinePreset>) => void;
 }
 
+// ==========================================
+// COMPONENTE WRAPPER PER INPUT DECIMALI PRECISI
+// Solvale il problema del reset di React quando si scrive "0.00..."
+// ==========================================
+interface DecimalInputProps {
+  value: number;
+  onChange: (val: number) => void;
+  placeholder?: string;
+  className?: string;
+  label: string;
+}
+
+function DecimalInput({ value, onChange, placeholder, className, label }: DecimalInputProps) {
+  // Tracciamo il valore come stringa locale per evitare che React tronchi i decimali in digitazione
+  const [inputValue, setInputValue] = useState<string>(value === 0 ? '' : value.toString());
+
+  // Sincronizza lo stato locale se il valore esterno cambia (es. cambio preset)
+  useEffect(() => {
+    const parsedLocal = parseFloat(inputValue) || 0;
+    if (value !== parsedLocal) {
+      setInputValue(value === 0 ? '' : value.toString());
+    }
+  }, [value]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Sostituiamo la virgola italiana con il punto decimale standard
+    let text = e.target.value.replace(',', '.');
+
+    // Regex: Consenti solo numeri e un singolo punto decimale
+    if (text === '' || /^[0-9]*\.?[0-9]*$/.test(text)) {
+      setInputValue(text);
+      
+      const parsed = parseFloat(text);
+      // Comunica il valore numerico reale al parent (0 se non valido o vuoto)
+      onChange(isNaN(parsed) ? 0 : parsed);
+    }
+  };
+
+  const handleBlur = () => {
+    // Alla perdita del focus, formattiamo in modo pulito il valore numerico
+    setInputValue(value === 0 ? '' : value.toString());
+  };
+
+  return (
+    <div>
+      <label className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-1">
+        {label}
+      </label>
+      <input
+        type="text"
+        inputMode="decimal"
+        value={inputValue}
+        placeholder={placeholder}
+        className={className}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={(e) => e.target.select()}
+      />
+    </div>
+  );
+}
+
+// ==========================================
+// COMPONENTE FORM PRINCIPALE
+// ==========================================
 export default function CostForm({ preset, onUpdate }: CostFormProps) {
   const { materiaPrima, costiFissiEVariabili, numeroBottiglie, nome, marginePercentuale, provvigionePercentuale } = preset;
 
@@ -69,6 +134,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
 
   return (
     <div className="space-y-6 bg-gray-50 p-4 rounded-xl border border-gray-200 print:bg-white print:border-none print:p-0">
+      
       {/* Informazioni Base */}
       <div>
         <label className={labelClass}>Nome Vino / Lotto</label>
@@ -211,7 +277,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
 
       <hr className="border-gray-200" />
 
-      {/* Sezione Struttura, Utenze, Lavoro e Trasporto */}
+      {/* Sezione Struttura, Utenze e Lavoro */}
       <div>
         <h3 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Processo, Logistica e Quote Allocate</h3>
         <div className="grid grid-cols-2 gap-4">
@@ -242,6 +308,20 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
               onChange={(val: number) => handleCostiChange('manoDopera', val)}
             />
           </div>
+          <DecimalInput
+            label="Utenze Allocate (€ fisso)"
+            value={costiFissiEVariabili.utenze || 0}
+            placeholder="Quota acqua/energia lotto"
+            className={inputClass}
+            onChange={(val) => handleCostiChange('utenze', val)}
+          />
+          <DecimalInput
+            label="Mano d'opera (€ totale)"
+            value={costiFissiEVariabili.manoDopera || 0}
+            placeholder="Ore totali × tariffa oraria"
+            className={inputClass}
+            onChange={(val) => handleCostiChange('manoDopera', val)}
+          />
           <div className="col-span-2">
             <label className={labelClass}>Trasporto e Logistica (€/bottiglia)</label>
             <DecimalInput
@@ -256,7 +336,7 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
 
       <hr className="border-gray-200" />
 
-      {/* Sezione Politiche Commerciali e Pricing*/}
+      {/* Sezione Politiche Commerciali e Pricing */}
       <div>
         <h3 className="text-sm font-bold text-red-900 mb-3 uppercase tracking-wider">Politiche Commerciali e Pricing</h3>
         <div className="grid grid-cols-2 gap-4 print:break-inside-avoid">

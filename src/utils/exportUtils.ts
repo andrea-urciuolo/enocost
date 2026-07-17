@@ -26,17 +26,17 @@ export const exportPresetToCsv = (preset: WinePreset, breakdown: CostBreakdown) 
     ['Trasporto e Logistica', dettaglioPerBottiglia.trasporto.toFixed(4), ((dettaglioPerBottiglia.trasporto / breakdown.costoPerBottiglia) * 100).toFixed(2)],
     [],
     ['SINTESI INDUSTRIALE'],
-    ['COSTO INDUSTRIALE PER BOTTIGLIA (COGS)', `EUR ${breakdown.costoPerBottiglia.toFixed(2)}`],
-    ['COSTO TOTALE DEL LOTTO', `EUR ${breakdown.costoTotaleLotto.toFixed(2)}`],
+    ['COSTO INDUSTRIALE PER BOTTIGLIA (COGS)', `EUR ${breakdown.costoPerBottiglia.toFixed(4)}`],
+    ['COSTO TOTALE DEL LOTTO', `EUR ${breakdown.costoTotaleLotto.toFixed(4)}`],
     [],
     ['POLITICHE COMMERCIALI E PRICING'],
     ['Margine Utile di Ricarica (Markup)', `${preset.marginePercentuale}%`],
-    ['PREZZO DI VENDITA TARGET', `EUR ${pricing.prezzoVenditaTarget.toFixed(2)}`],
+    ['PREZZO DI VENDITA TARGET', `EUR ${pricing.prezzoVenditaTarget.toFixed(4)}`],
     ['Provvigioni Agenti / Sconto applicato', `${preset.provvigionePercentuale}%`],
-    ['PREZZO NETTO RICAVATO', `EUR ${pricing.prezzoNetto.toFixed(2)}`],
-    ['MARGINE NETTO REALE (€/Bottiglia)', `EUR ${pricing.margineEffettivoEuro.toFixed(2)}`],
-    ['RICAVO NETTO TOTALE LOTTO', `EUR ${pricing.ricavoTotaleLotto.toFixed(2)}`],
-    ['PROFITTO NETTO TOTALE LOTTO', `EUR ${pricing.profittoTotaleLotto.toFixed(2)}`]
+    ['PREZZO NETTO RICAVATO', `EUR ${pricing.prezzoNetto.toFixed(4)}`],
+    ['MARGINE NETTO REALE (€/Bottiglia)', `EUR ${pricing.margineEffettivoEuro.toFixed(4)}`],
+    ['RICAVO NETTO TOTALE LOTTO', `EUR ${pricing.ricavoTotaleLotto.toFixed(4)}`],
+    ['PROFITTO NETTO TOTALE LOTTO', `EUR ${pricing.profittoTotaleLotto.toFixed(4)}`]
   ];
 
   // Trasformazione in formato CSV leggibile da Excel (usando il punto e virgola come separatore standard europeo)
