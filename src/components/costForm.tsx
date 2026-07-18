@@ -246,18 +246,6 @@ export default function CostForm({ preset, onUpdate }: CostFormProps) {
               onChange={(val: number) => handleCostiChange('manoDopera', val)}
             />
           </div>
-          <DecimalInput
-            value={costiFissiEVariabili.utenze || 0}
-            placeholder="Quota acqua/energia lotto"
-            className={inputClass}
-            onChange={(val) => handleCostiChange('utenze', val)}
-          />
-          <DecimalInput
-            value={costiFissiEVariabili.manoDopera || 0}
-            placeholder="Ore totali × tariffa oraria"
-            className={inputClass}
-            onChange={(val) => handleCostiChange('manoDopera', val)}
-          />
           <div className="col-span-2">
             <label className={labelClass}>Trasporto e Logistica (€/bottiglia)</label>
             <DecimalInput
